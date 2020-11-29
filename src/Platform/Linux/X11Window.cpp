@@ -9,18 +9,28 @@ namespace rgl {
         assert(m_display);
 
         m_screen = x11::XDefaultScreen(m_display);
+        x11::Window rootWindow = x11::XDefaultRootWindow(m_display);
 
         int blackColor = x11::XBlackPixel(m_display, m_screen);
         int whiteColor = x11::XWhitePixel(m_display, m_screen);
 
-        m_window = x11::XCreateSimpleWindow(m_display, x11::XDefaultRootWindow(m_display), pos.x, pos.y, size.x, size.y, 0, blackColor, whiteColor);
+        // Set requirements for rendering target
+        int screenBitDepth = 24;
+        assert(x11::XMatchVisualInfo(m_display, m_screen, screenBitDepth, TrueColor, &m_vInfo));
+
+        // Set window attributes
+        m_windowAttributes.background_pixel = 0;
+        m_windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
+        m_windowAttributes.event_mask = StructureNotifyMask; // Tell the server which events to inform us about
+        unsigned long attributeMask = CWBackPixel | CWColormap | CWEventMask;
+
+        // Create Window
+        m_window = x11::XCreateWindow(m_display, rootWindow, pos.x, pos.y, size.x, size.y, 0, m_vInfo.depth, InputOutput, m_vInfo.visual, attributeMask, &m_windowAttributes);
+        x11::XStoreName(m_display, m_window, title);
 
         // This is used to intercept window closing requests so that they can be handled by the user
         x11::Atom wmDelete = x11::XInternAtom(m_display, "WM_DELETE_WINDOW", true);
         x11::XSetWMProtocols(m_display, m_window, &wmDelete, 1);
-
-        // Tell the server which events to inform us about
-        x11::XSelectInput(m_display, m_window, StructureNotifyMask);
 
         // Create graphics context
         m_gc = x11::XCreateGC(m_display, m_window, 0, 0);
