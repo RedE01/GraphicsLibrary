@@ -15,8 +15,12 @@ namespace rgl {
 
         m_window = x11::XCreateSimpleWindow(m_display, x11::XDefaultRootWindow(m_display), pos.x, pos.y, size.x, size.y, 0, blackColor, whiteColor);
 
+        // This is used to intercept window closing requests so that they can be handled by the user
+        x11::Atom wmDelete = x11::XInternAtom(m_display, "WM_DELETE_WINDOW", true);
+        x11::XSetWMProtocols(m_display, m_window, &wmDelete, 1);
+
         // Tell the server which events to inform us about
-        x11::XSelectInput(m_display, m_window, StructureNotifyMask | ExposureMask);
+        x11::XSelectInput(m_display, m_window, StructureNotifyMask);
 
         // Create graphics context
         m_gc = x11::XCreateGC(m_display, m_window, 0, 0);
@@ -36,6 +40,9 @@ namespace rgl {
             if(e.xany.window != m_window) continue;
 
             switch (e.type) {
+            case ClientMessage:
+                x11::XDestroyWindow(m_display, m_window);
+                break;
             case DestroyNotify: {
                 WindowCloseEvent wce;
                 m_eventCallback(&wce);
