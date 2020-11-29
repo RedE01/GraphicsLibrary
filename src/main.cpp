@@ -2,7 +2,14 @@
 #include "Application.h"
 
 class Test : public rgl::Application {
+public:
+    virtual void onUpdate() {
+    }
 
+    virtual void onEvent(rgl::Event* event) {
+        if(event->GetEventType() == rgl::EventType::WindowClose)
+            window->windowOpen = false;
+    }
 };
 
 int main() {

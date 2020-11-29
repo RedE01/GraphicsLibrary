@@ -17,4 +17,8 @@ namespace rgl {
         #endif
     }
 
+    void Window::setEventCallback(const EventCallbackFunction& callback) {
+        m_eventCallback = callback;
+    }
+
 }

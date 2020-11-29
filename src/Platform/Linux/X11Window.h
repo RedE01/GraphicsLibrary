@@ -12,6 +12,7 @@ namespace rgl {
         X11Window(const char* title, Vector2i pos, Vector2i size);
 
         virtual void open() override;
+        virtual void pollEvents() override;
 
     private:
         x11::Display* m_display;

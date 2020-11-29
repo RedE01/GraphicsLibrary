@@ -1,6 +1,6 @@
 #include "X11Window.h"
+#include "../../Event/ApplicationEvent.h"
 #include <assert.h>
-#include <iostream>
 
 namespace rgl {
 
@@ -27,21 +27,20 @@ namespace rgl {
         // Make the window appear on the screen
         x11::XMapWindow(m_display, m_window);
         x11::XFlush(m_display);
+    }
 
-        // Event loop
-        bool windowOpen = true;
-        while(windowOpen) {
+    void X11Window::pollEvents() {
+        while(x11::XPending(m_display) > 0) {
             x11::XEvent e;
             x11::XNextEvent(m_display, &e);
             if(e.xany.window != m_window) continue;
 
             switch (e.type) {
-            case DestroyNotify:
-                windowOpen = false;
+            case DestroyNotify: {
+                WindowCloseEvent wce;
+                m_eventCallback(&wce);
                 break;
-            case Expose:
-                x11::XDrawLine(m_display, m_window, m_gc, 10, 10, 50, 50);
-                break;
+            }
             }
         }
     }

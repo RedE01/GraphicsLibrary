@@ -15,6 +15,12 @@ namespace rgl {
         if(window.get()) {
             window->open();
         }
+        window->setEventCallback([this](Event* e){ return this->onEvent(e); });
+
+        while(window->windowOpen) {
+            onUpdate();
+            window->pollEvents();
+        }
     }
     
 }
