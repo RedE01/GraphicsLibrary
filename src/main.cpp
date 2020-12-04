@@ -7,8 +7,6 @@ public:
     }
 
     virtual void onEvent(rgl::Event* event) {
-        if(event->GetEventType() == rgl::EventType::WindowClose)
-            window->windowOpen = false;
     }
 };
 

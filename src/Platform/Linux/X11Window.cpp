@@ -50,10 +50,9 @@ namespace rgl {
             if(e.xany.window != m_window) continue;
 
             switch (e.type) {
-            case ClientMessage:
+            case ClientMessage: {
+                windowOpen = false;
                 x11::XDestroyWindow(m_display, m_window);
-                break;
-            case DestroyNotify: {
                 WindowCloseEvent wce;
                 m_eventCallback(&wce);
                 break;
