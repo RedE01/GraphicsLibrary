@@ -85,9 +85,13 @@ namespace rgl {
             }
             case ConfigureNotify: {
                 x11::XConfigureEvent* ce = (x11::XConfigureEvent*)&e;
-                m_size.x = ce->width;
-                m_size.y = ce->height;
-                initWindowBuffer();
+                if(m_size.x != ce->width || m_size.y != ce->height) {
+                    m_size.x = ce->width;
+                    m_size.y = ce->height;
+                    initWindowBuffer();
+                    WindowResizeEvent wre;
+                    m_eventCallback(&wre);
+                }
                 break;
             }
             }

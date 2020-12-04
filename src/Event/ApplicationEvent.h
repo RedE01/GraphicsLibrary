@@ -10,4 +10,11 @@ namespace rgl {
         virtual const char* GetName() const { return "WindowCloseEvent"; }
     };
 
+    class WindowResizeEvent : public Event {
+    public:
+        virtual int GetCategoryFlags() const { return EventCategory::EventCategoryApplication; }
+        virtual EventType GetEventType() const { return EventType::WindowResize; }
+        virtual const char* GetName() const { return "WindowResizeEvent"; }
+    };
+
 }
