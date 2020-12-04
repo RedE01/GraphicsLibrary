@@ -1,5 +1,6 @@
 #include "X11Window.h"
 #include "../../Event/ApplicationEvent.h"
+#include "../../Event/InputEvent.h"
 #include <assert.h>
 #include <cstdlib>
 
@@ -24,7 +25,7 @@ namespace rgl {
         m_windowAttributes.background_pixel = 0;
         m_windowAttributes.bit_gravity = StaticGravity; // Keep window content on resize
         m_windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
-        m_windowAttributes.event_mask = StructureNotifyMask; // Tell the server which events to inform us about
+        m_windowAttributes.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask; // Tell the server which events to inform us about
         unsigned long attributeMask = CWBitGravity | CWBackPixel | CWColormap | CWEventMask;
 
         // Create Window
@@ -92,6 +93,18 @@ namespace rgl {
                     WindowResizeEvent wre;
                     m_eventCallback(&wre);
                 }
+                break;
+            }
+            case KeyPress: {
+                x11::XKeyPressedEvent* ev = (x11::XKeyPressedEvent*)&e;
+                KeyPressedEvent kpe(ev->keycode);
+                m_eventCallback(&kpe);
+                break;
+            }
+            case KeyRelease: {
+                x11::XKeyReleasedEvent* ev = (x11::XKeyReleasedEvent*)&e;
+                KeyReleasedEvent kre(ev->keycode);
+                m_eventCallback(&kre);
                 break;
             }
             }
