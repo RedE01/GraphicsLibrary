@@ -11,9 +11,15 @@ namespace rgl {
     class X11Window : public Window {
     public:
         X11Window(const char* title, Vector2i pos, Vector2i size);
+        ~X11Window();
 
         virtual void open() override;
+        virtual void draw() override;
         virtual void pollEvents() override;
+        virtual char* getWindowBuffer() override;
+
+    private:
+        void initWindowBuffer();
 
     private:
         x11::Display* m_display;
@@ -22,6 +28,8 @@ namespace rgl {
         x11::XSetWindowAttributes m_windowAttributes;
         x11::XVisualInfo m_vInfo;
         x11::GC m_gc;
+        x11::XImage* m_xWindowBuffer;
+        char* m_windowBuffer = nullptr;
     };
 
 }

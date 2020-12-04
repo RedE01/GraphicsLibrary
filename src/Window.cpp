@@ -6,7 +6,7 @@
 
 namespace rgl {
 
-    Window::Window(const char* title, Vector2i pos, Vector2i size) : pos(pos), size(size) {
+    Window::Window(const char* title, Vector2i pos, Vector2i size) : m_pos(pos), m_size(size) {
     }
 
     std::unique_ptr<Window> Window::Create(const char* title, Vector2i pos, Vector2i size) {
@@ -19,6 +19,18 @@ namespace rgl {
 
     void Window::setEventCallback(const EventCallbackFunction& callback) {
         m_eventCallback = callback;
+    }
+
+    Vector2i Window::getWindowSize() const {
+        return m_size;
+    }
+
+    Vector2i Window::getWindowPos() const {
+        return m_pos;
+    }
+
+    int Window::getWindowBufferSize() const {
+        return m_size.x * m_size.y * bytesPerPixel;
     }
 
 }

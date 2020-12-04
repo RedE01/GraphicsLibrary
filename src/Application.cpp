@@ -19,6 +19,8 @@ namespace rgl {
 
         while(window->windowOpen) {
             onUpdate();
+            window->draw();
+            
             window->pollEvents();
         }
     }

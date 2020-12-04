@@ -1,6 +1,7 @@
 #include "X11Window.h"
 #include "../../Event/ApplicationEvent.h"
 #include <assert.h>
+#include <cstdlib>
 
 namespace rgl {
 
@@ -16,7 +17,8 @@ namespace rgl {
 
         // Set requirements for rendering target
         int screenBitDepth = 24;
-        assert(x11::XMatchVisualInfo(m_display, m_screen, screenBitDepth, TrueColor, &m_vInfo));
+        int matchVInfoRet = x11::XMatchVisualInfo(m_display, m_screen, screenBitDepth, TrueColor, &m_vInfo);
+        assert(matchVInfoRet);
 
         // Set window attributes
         m_windowAttributes.background_pixel = 0;
@@ -33,14 +35,34 @@ namespace rgl {
         x11::XSetWMProtocols(m_display, m_window, &wmDelete, 1);
 
         // Create graphics context
-        m_gc = x11::XCreateGC(m_display, m_window, 0, 0);
-        x11::XSetForeground(m_display, m_gc, blackColor);
+        m_gc = x11::XDefaultGC(m_display, m_screen);
+
+        initWindowBuffer();
+    }
+
+    X11Window::~X11Window() {
+        if(m_windowBuffer != nullptr) {
+            free(m_windowBuffer);
+        }
     }
 
     void X11Window::open() {
         // Make the window appear on the screen
         x11::XMapWindow(m_display, m_window);
         x11::XFlush(m_display);
+    }
+
+    void X11Window::draw() {
+        if(!m_windowBuffer) return;
+        
+        Vector2i size = getWindowSize();
+        for(int i = 0; i < 100; ++i) {
+            for(int j = 0; j < 10; ++j) {
+                unsigned int* pixel = (unsigned int*)(m_windowBuffer+(i*bytesPerPixel)+(j*bytesPerPixel*size.x));
+                *pixel = 0xff0000ff;
+            }
+        }
+        int t = x11::XPutImage(m_display, m_window, m_gc, m_xWindowBuffer, 0, 0, 0, 0, size.x, size.y);        
     }
 
     void X11Window::pollEvents() {
@@ -59,6 +81,22 @@ namespace rgl {
             }
             }
         }
+    }
+
+    char* X11Window::getWindowBuffer() {
+        return m_windowBuffer;
+    }
+
+    void X11Window::initWindowBuffer() {
+        if(m_windowBuffer != nullptr) {
+            free(m_windowBuffer);
+            m_windowBuffer = nullptr;
+        }
+
+        m_windowBuffer = (char*)malloc(getWindowBufferSize());
+
+        Vector2i size = getWindowSize();
+        m_xWindowBuffer = x11::XCreateImage(m_display, m_vInfo.visual, m_vInfo.depth, ZPixmap, 0, m_windowBuffer, size.x, size.y, bytesPerPixel * 8, 0);
     }
 
 }
