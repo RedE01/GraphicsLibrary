@@ -30,6 +30,7 @@ namespace rgl {
         x11::GC m_gc;
         x11::XImage* m_xWindowBuffer;
         char* m_windowBuffer = nullptr;
+        x11::Atom m_wmDeleteWindow;
     };
 
 }

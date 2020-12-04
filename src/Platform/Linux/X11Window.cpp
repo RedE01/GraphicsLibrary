@@ -31,8 +31,8 @@ namespace rgl {
         x11::XStoreName(m_display, m_window, title);
 
         // This is used to intercept window closing requests so that they can be handled by the user
-        x11::Atom wmDelete = x11::XInternAtom(m_display, "WM_DELETE_WINDOW", true);
-        x11::XSetWMProtocols(m_display, m_window, &wmDelete, 1);
+        m_wmDeleteWindow = x11::XInternAtom(m_display, "WM_DELETE_WINDOW", true);
+        x11::XSetWMProtocols(m_display, m_window, &m_wmDeleteWindow, 1);
 
         // Create graphics context
         m_gc = x11::XDefaultGC(m_display, m_screen);
@@ -73,11 +73,14 @@ namespace rgl {
 
             switch (e.type) {
             case ClientMessage: {
-                windowOpen = false;
-                x11::XDestroyWindow(m_display, m_window);
-                WindowCloseEvent wce;
-                m_eventCallback(&wce);
-                break;
+                x11::XClientMessageEvent* cme = (x11::XClientMessageEvent*)&e;
+                if(cme->data.l[0] == m_wmDeleteWindow) {
+                    windowOpen = false;
+                    x11::XDestroyWindow(m_display, m_window);
+                    WindowCloseEvent wce;
+                    m_eventCallback(&wce);
+                    break;
+                }
             }
             }
         }
