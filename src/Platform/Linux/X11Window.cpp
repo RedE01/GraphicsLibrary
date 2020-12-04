@@ -22,9 +22,10 @@ namespace rgl {
 
         // Set window attributes
         m_windowAttributes.background_pixel = 0;
+        m_windowAttributes.bit_gravity = StaticGravity; // Keep window content on resize
         m_windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
         m_windowAttributes.event_mask = StructureNotifyMask; // Tell the server which events to inform us about
-        unsigned long attributeMask = CWBackPixel | CWColormap | CWEventMask;
+        unsigned long attributeMask = CWBitGravity | CWBackPixel | CWColormap | CWEventMask;
 
         // Create Window
         m_window = x11::XCreateWindow(m_display, rootWindow, pos.x, pos.y, size.x, size.y, 0, m_vInfo.depth, InputOutput, m_vInfo.visual, attributeMask, &m_windowAttributes);
@@ -56,10 +57,10 @@ namespace rgl {
         if(!m_windowBuffer) return;
         
         Vector2i size = getWindowSize();
-        for(int i = 0; i < 100; ++i) {
-            for(int j = 0; j < 10; ++j) {
+        for(int i = 0; i < size.x; ++i) {
+            for(int j = 0; j < size.y; ++j) {
                 unsigned int* pixel = (unsigned int*)(m_windowBuffer+(i*bytesPerPixel)+(j*bytesPerPixel*size.x));
-                *pixel = 0xff0000ff;
+                *pixel = 0x00ff0000;
             }
         }
         int t = x11::XPutImage(m_display, m_window, m_gc, m_xWindowBuffer, 0, 0, 0, 0, size.x, size.y);        
@@ -82,6 +83,13 @@ namespace rgl {
                     break;
                 }
             }
+            case ConfigureNotify: {
+                x11::XConfigureEvent* ce = (x11::XConfigureEvent*)&e;
+                m_size.x = ce->width;
+                m_size.y = ce->height;
+                initWindowBuffer();
+                break;
+            }
             }
         }
     }
@@ -92,10 +100,9 @@ namespace rgl {
 
     void X11Window::initWindowBuffer() {
         if(m_windowBuffer != nullptr) {
-            free(m_windowBuffer);
+            XDestroyImage(m_xWindowBuffer);
             m_windowBuffer = nullptr;
         }
-
         m_windowBuffer = (char*)malloc(getWindowBufferSize());
 
         Vector2i size = getWindowSize();
