@@ -16,13 +16,13 @@ namespace rgl {
         m_keyMap[XK_4] = Key::K4; m_keyMap[XK_5] = Key::K5; m_keyMap[XK_6] = Key::K6; m_keyMap[XK_7] = Key::K7;
         m_keyMap[XK_8] = Key::K8; m_keyMap[XK_9] = Key::K9;
 
-        m_keyMap[XK_F1] = Key::F1; m_keyMap[XK_F1] = Key::F2;  m_keyMap[XK_F1] = Key::F3;  m_keyMap[XK_F1] = Key::F4;
-        m_keyMap[XK_F1] = Key::F5; m_keyMap[XK_F1] = Key::F6;  m_keyMap[XK_F1] = Key::F7;  m_keyMap[XK_F1] = Key::F8;
-        m_keyMap[XK_F1] = Key::F9; m_keyMap[XK_F1] = Key::F10; m_keyMap[XK_F1] = Key::F11; m_keyMap[XK_F1] = Key::F12;
+        m_keyMap[XK_F1] = Key::F1; m_keyMap[XK_F2]  = Key::F2;  m_keyMap[XK_F3]  = Key::F3;  m_keyMap[XK_F4]  = Key::F4;
+        m_keyMap[XK_F5] = Key::F5; m_keyMap[XK_F6]  = Key::F6;  m_keyMap[XK_F7]  = Key::F7;  m_keyMap[XK_F8]  = Key::F8;
+        m_keyMap[XK_F9] = Key::F9; m_keyMap[XK_F10] = Key::F10; m_keyMap[XK_F11] = Key::F11; m_keyMap[XK_F12] = Key::F12;
 
         m_keyMap[XK_Escape] = Key::Esc; m_keyMap[XK_Tab] = Key::Tab; m_keyMap[XK_Caps_Lock] = Key::CapsLock; m_keyMap[XK_space] = Key::Space;
         m_keyMap[XK_Shift_L] = Key::LeftShift; m_keyMap[XK_Control_L] = Key::LeftControl; m_keyMap[XK_Shift_R] = Key::RightShift; m_keyMap[XK_Control_R] = Key::RightControl;
-        m_keyMap[XK_Alt_L] = Key::LeftAlt; m_keyMap[XK_Alt_R] = Key::RightAlt; m_keyMap[XK_KP_Enter] = Key::Enter; m_keyMap[XK_BackSpace] = Key::Backspace,
+        m_keyMap[XK_Alt_L] = Key::LeftAlt; m_keyMap[XK_Alt_R] = Key::RightAlt; m_keyMap[XK_Return] = Key::Enter; m_keyMap[XK_BackSpace] = Key::Backspace,
 
         m_keyMap[XK_Insert] = Key::Insert; m_keyMap[XK_Home] = Key::Home; m_keyMap[XK_Page_Up] = Key::PageUp; m_keyMap[XK_Delete] = Key::Delete;
         m_keyMap[XK_End] = Key::End; m_keyMap[XK_Page_Down] = Key::PageDown;
