@@ -58,12 +58,6 @@ namespace rgl {
         if(!m_windowBuffer) return;
         
         Vector2i size = getWindowSize();
-        for(int i = 0; i < size.x; ++i) {
-            for(int j = 0; j < size.y; ++j) {
-                unsigned int* pixel = (unsigned int*)(m_windowBuffer+(i*bytesPerPixel)+(j*bytesPerPixel*size.x));
-                *pixel = 0x00ff0000;
-            }
-        }
         int t = x11::XPutImage(m_display, m_window, m_gc, m_xWindowBuffer, 0, 0, 0, 0, size.x, size.y);        
     }
 
