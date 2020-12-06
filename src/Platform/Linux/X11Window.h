@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Window.h"
+#include "../../Input/KeycodeMapper.h"
 
 namespace x11 {
     #include <X11/Xlib.h>
@@ -31,6 +32,7 @@ namespace rgl {
         x11::XImage* m_xWindowBuffer;
         char* m_windowBuffer = nullptr;
         x11::Atom m_wmDeleteWindow;
+        KeycodeMapper m_keycodeMapper;
     };
 
 }

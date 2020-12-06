@@ -12,8 +12,10 @@ project "GraphicsLibrary"
         "src/*.h",
         "src/*.cpp",
 
-        "src/Etc/*.h",
-        "src/Etc/*.cpp",
+        "src/Etc/**.h",
+        "src/Etc/**.cpp",
+
+        "src/Input/**.cpp"
     }
 
     filter "system:linux"

@@ -96,14 +96,14 @@ namespace rgl {
                 break;
             }
             case KeyPress: {
-                x11::XKeyPressedEvent* ev = (x11::XKeyPressedEvent*)&e;
-                KeyPressedEvent kpe(ev->keycode);
+                x11::KeySym ks = x11::XLookupKeysym(&e.xkey, 0);
+                KeyPressedEvent kpe(m_keycodeMapper.getKey(ks));
                 m_eventCallback(&kpe);
                 break;
             }
             case KeyRelease: {
-                x11::XKeyReleasedEvent* ev = (x11::XKeyReleasedEvent*)&e;
-                KeyReleasedEvent kre(ev->keycode);
+                x11::KeySym ks = x11::XLookupKeysym(&e.xkey, 0);
+                KeyReleasedEvent kre(m_keycodeMapper.getKey(ks));
                 m_eventCallback(&kre);
                 break;
             }
