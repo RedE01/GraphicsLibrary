@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Window.h"
+#include "Input/Input.h"
 
 namespace rgl {
 
@@ -15,14 +16,23 @@ namespace rgl {
         if(window.get()) {
             window->open();
         }
-        window->setEventCallback([this](Event* e){ return this->onEvent(e); });
+        window->setEventCallback([this](Event* e){ return this->handleEvent(e); });
 
         while(window->windowOpen) {
             onUpdate();
             window->draw();
             
+            Input::Update();
             window->pollEvents();
         }
+    }
+
+    void Application::handleEvent(Event* event) {
+        if(event->isInCategory(EventCategory::EventCategoryKeyboard)) {
+            Input::HandleEvent(event);
+        }
+        
+        onEvent(event);
     }
     
 }

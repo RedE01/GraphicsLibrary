@@ -14,6 +14,9 @@ namespace rgl {
         virtual void onUpdate() = 0;
         virtual void onEvent(Event* event) = 0;
 
+    private:
+        void handleEvent(Event* event);
+
     public:
         std::unique_ptr<Window> window;
     };
