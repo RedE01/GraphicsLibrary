@@ -1,8 +1,5 @@
-workspace "GraphicsLibrary"
-    configurations { "Debug", "Release" }
-
 project "GraphicsLibrary"
-    kind "ConsoleApp"
+    kind "StaticLib"
     language "C++"
     cppdialect "C++17"
     targetdir "bin/%{cfg.buildcfg}"
