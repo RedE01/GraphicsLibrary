@@ -14,10 +14,12 @@ namespace rgl {
         X11Window(const char* title, Vector2i pos, Vector2i size);
         ~X11Window();
 
+        virtual char* getWindowBuffer() override;
+
+    protected:
         virtual void open() override;
         virtual void draw() override;
         virtual void pollEvents() override;
-        virtual char* getWindowBuffer() override;
 
     private:
         void initWindowBuffer();
