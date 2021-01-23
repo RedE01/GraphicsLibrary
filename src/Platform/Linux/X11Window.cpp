@@ -105,6 +105,20 @@ namespace rgl {
         }
     }
 
+    void X11Window::setPixel(int x, int y, Vector3 val) {
+        if(x < 0 || x >= m_size.x || y < 0 || y >= m_size.y) return;
+
+        val *= 255.0;
+        unsigned int pixelVal = 0xFF000000 | ((uint8_t)val.x << 16) | ((uint8_t)val.y << 8) | (int8_t)val.z;
+
+        int offset = (x + y * m_size.x) * bytesPerPixel;
+        *((unsigned int*)(m_windowBuffer + offset)) = pixelVal;
+    }
+
+    void X11Window::setPixel(const Vector2i& pos, Vector3 val) {
+        setPixel(pos.x, pos.y, val);
+    }
+
     char* X11Window::getWindowBuffer() {
         return m_windowBuffer;
     }

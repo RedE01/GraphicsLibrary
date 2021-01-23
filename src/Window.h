@@ -23,6 +23,9 @@ namespace rgl {
         friend class Application;
 
     public:
+        virtual void setPixel(int x, int y, Vector3 val) = 0;
+        virtual void setPixel(const Vector2i& pos, Vector3 val) = 0;
+
         virtual char* getWindowBuffer() = 0;
         Vector2i getWindowSize() const;
         Vector2i getWindowPos() const;
