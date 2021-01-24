@@ -109,7 +109,7 @@ namespace rgl {
         if(x < 0 || x >= m_size.x || y < 0 || y >= m_size.y) return;
 
         val *= 255.0;
-        unsigned int pixelVal = 0xFF000000 | ((uint8_t)val.x << 16) | ((uint8_t)val.y << 8) | (int8_t)val.z;
+        unsigned int pixelVal = 0xFF000000 | ((unsigned int)val.x << 16) | ((unsigned int)val.y << 8) | (unsigned int)val.z;
 
         int offset = (x + y * m_size.x) * bytesPerPixel;
         *((unsigned int*)(m_windowBuffer + offset)) = pixelVal;
