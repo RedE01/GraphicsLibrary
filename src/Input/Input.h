@@ -1,4 +1,4 @@
-#pragma one
+#pragma once
 #include "Keycodes.h"
 
 namespace rgl {
