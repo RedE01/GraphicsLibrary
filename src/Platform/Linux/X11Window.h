@@ -16,6 +16,8 @@ namespace rgl {
 
         virtual void setPixel(int x, int y, Vector3 val) override;
         virtual void setPixel(const Vector2i& pos, Vector3 val) override;
+        virtual void setWindowSize(Vector2i size) override;
+        virtual void setWindowPos(Vector2i pos) override;
 
         virtual char* getWindowBuffer() override;
 

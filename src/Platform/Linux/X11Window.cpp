@@ -155,6 +155,16 @@ namespace rgl {
         setPixel(pos.x, pos.y, val);
     }
 
+    void X11Window::setWindowSize(Vector2i size) {
+        x11::XResizeWindow(m_display, m_window, size.x, size.y);
+        m_size = size;
+    }
+
+    void X11Window::setWindowPos(Vector2i pos) {
+        x11::XMoveWindow(m_display, m_window, pos.x, pos.y);
+        m_pos = pos;
+    }
+
     char* X11Window::getWindowBuffer() {
         return m_windowBuffer;
     }
