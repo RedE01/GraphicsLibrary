@@ -4,6 +4,12 @@
 #include <assert.h>
 #include <cstdlib>
 #include <limits>
+#include <cstring>
+
+namespace x11 {
+    #include <X11/Xatom.h>
+}
+typedef x11::Atom Atom;
 
 namespace rgl {
 
@@ -114,6 +120,25 @@ namespace rgl {
             }
             }
         }
+    }
+
+    void X11Window::setFullscreen(bool fullscreen) {
+        x11::Atom wmState = x11::XInternAtom(m_display, "_NET_WM_STATE", true);
+        x11::Atom wmFullscreen = x11::XInternAtom(m_display, "_NET_WM_STATE_FULLSCREEN", False);
+
+        x11::XEvent xev;
+        std::memset(&xev, 0, sizeof(xev));
+        xev.type = ClientMessage;
+        xev.xclient.window = m_window;
+        xev.xclient.message_type = wmState;
+        xev.xclient.format = 32;
+        xev.xclient.data.l[0] = fullscreen ? 1 : 0;
+        xev.xclient.data.l[1] = wmFullscreen;
+        xev.xclient.data.l[2] = 0;
+
+        x11::XSendEvent(m_display, x11::XDefaultRootWindow(m_display), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev);
+
+        m_isFullscreen = fullscreen;
     }
 
     void X11Window::setPixel(int x, int y, Vector3 val) {

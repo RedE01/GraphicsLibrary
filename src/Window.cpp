@@ -6,7 +6,7 @@
 
 namespace rgl {
 
-    Window::Window(const char* title, Vector2i size, Vector2i pos) : m_pos(pos), m_size(size) {
+    Window::Window(const char* title, Vector2i size, Vector2i pos) : m_pos(pos), m_size(size), m_isFullscreen(false) {
     }
 
     std::unique_ptr<Window> Window::Create(const char* title, Vector2i size, Vector2i pos) {
@@ -31,6 +31,10 @@ namespace rgl {
 
     int Window::getWindowBufferSize() const {
         return m_size.x * m_size.y * bytesPerPixel;
+    }
+
+    bool Window::isFullscreen() const {
+        return m_isFullscreen;
     }
 
 }

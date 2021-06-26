@@ -23,6 +23,7 @@ namespace rgl {
         virtual void open() override;
         virtual void draw() override;
         virtual void pollEvents() override;
+        virtual void setFullscreen(bool fullscreen) override;
 
     private:
         void initWindowBuffer();

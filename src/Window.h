@@ -25,11 +25,13 @@ namespace rgl {
     public:
         virtual void setPixel(int x, int y, Vector3 val) = 0;
         virtual void setPixel(const Vector2i& pos, Vector3 val) = 0;
+        virtual void setFullscreen(bool fullscreen) = 0;
 
         virtual char* getWindowBuffer() = 0;
         Vector2i getWindowSize() const;
         Vector2i getWindowPos() const;
         int getWindowBufferSize() const;
+        bool isFullscreen() const;
 
     public:
         bool windowOpen = true;
@@ -38,6 +40,7 @@ namespace rgl {
     protected:
         EventCallbackFunction m_eventCallback;
         Vector2i m_pos, m_size;
+        bool m_isFullscreen;
     };
 
 }
