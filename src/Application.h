@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Window.h"
+#include <limits>
 
 namespace rgl {
 
@@ -8,7 +9,7 @@ namespace rgl {
     public:
         Application();
 
-        void create(const char* title, Vector2i pos, Vector2i size);
+        void create(const char* title, Vector2i size, Vector2i pos = Vector2i(std::numeric_limits<int>::max(), std::numeric_limits<int>::max()));
         void run();
 
         virtual void onUpdate() = 0;

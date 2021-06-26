@@ -8,8 +8,8 @@ namespace rgl {
 
     }
 
-    void Application::create(const char* title, Vector2i pos, Vector2i size) {
-        window = Window::Create(title, pos, size);
+    void Application::create(const char* title, Vector2i size, Vector2i pos) {
+        window = Window::Create(title, size, pos);
     }
 
     void Application::run() {

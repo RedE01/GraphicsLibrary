@@ -3,10 +3,11 @@
 #include "../../Event/InputEvent.h"
 #include <assert.h>
 #include <cstdlib>
+#include <limits>
 
 namespace rgl {
 
-    X11Window::X11Window(const char* title, Vector2i pos, Vector2i size) : Window(title, pos, size) {
+    X11Window::X11Window(const char* title, Vector2i size, Vector2i pos) : Window(title, size, pos) {
         m_display = x11::XOpenDisplay(0);
         assert(m_display);
 
@@ -35,6 +36,16 @@ namespace rgl {
         // This is used to intercept window closing requests so that they can be handled by the user
         m_wmDeleteWindow = x11::XInternAtom(m_display, "WM_DELETE_WINDOW", true);
         x11::XSetWMProtocols(m_display, m_window, &m_wmDeleteWindow, 1);
+
+        // Force position of window
+        if(pos.x != std::numeric_limits<int>::max() && pos.y != std::numeric_limits<int>::max()) {
+            x11::XSizeHints sizeHints = {0};
+            sizeHints.flags = PPosition;
+            sizeHints.x = pos.x;
+            sizeHints.y = pos.y;
+
+            x11::XSetNormalHints(m_display, m_window, &sizeHints);
+        }
 
         // Create graphics context
         m_gc = x11::XDefaultGC(m_display, m_screen);

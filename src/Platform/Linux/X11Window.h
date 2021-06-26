@@ -11,7 +11,7 @@ namespace rgl {
 
     class X11Window : public Window {
     public:
-        X11Window(const char* title, Vector2i pos, Vector2i size);
+        X11Window(const char* title, Vector2i size, Vector2i pos);
         ~X11Window();
 
         virtual void setPixel(int x, int y, Vector3 val) override;

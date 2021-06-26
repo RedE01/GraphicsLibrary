@@ -6,12 +6,12 @@
 
 namespace rgl {
 
-    Window::Window(const char* title, Vector2i pos, Vector2i size) : m_pos(pos), m_size(size) {
+    Window::Window(const char* title, Vector2i size, Vector2i pos) : m_pos(pos), m_size(size) {
     }
 
-    std::unique_ptr<Window> Window::Create(const char* title, Vector2i pos, Vector2i size) {
+    std::unique_ptr<Window> Window::Create(const char* title, Vector2i size, Vector2i pos) {
         #ifdef RGL_LINUX
-            return std::make_unique<X11Window>(title, pos, size);
+            return std::make_unique<X11Window>(title, size, pos);
         #else
             return nullptr;
         #endif

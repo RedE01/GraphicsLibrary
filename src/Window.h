@@ -10,9 +10,9 @@ namespace rgl {
     protected:
         using EventCallbackFunction = std::function<void(Event*)>;
 
-        Window(const char* title, Vector2i pos, Vector2i size);
+        Window(const char* title, Vector2i size, Vector2i pos);
         
-        static std::unique_ptr<Window> Create(const char* title, Vector2i pos, Vector2i size);
+        static std::unique_ptr<Window> Create(const char* title, Vector2i size, Vector2i pos);
         
         virtual void open() = 0;
         virtual void draw() = 0;
