@@ -17,7 +17,6 @@ project "GraphicsLibrary"
 
     filter "system:linux"
         defines "RGL_LINUX"
-        links { "X11"}
         files {
             "src/Platform/Linux/**.h",
             "src/Platform/Linux/**.cpp"
