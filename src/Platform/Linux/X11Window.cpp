@@ -63,6 +63,8 @@ namespace rgl {
         if(m_windowBuffer != nullptr) {
             free(m_windowBuffer);
         }
+
+        x11::XCloseDisplay(m_display);
     }
 
     void X11Window::open() {
