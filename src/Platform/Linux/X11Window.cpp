@@ -1,6 +1,7 @@
 #include "X11Window.h"
 #include "../../Event/ApplicationEvent.h"
 #include "../../Event/InputEvent.h"
+#include "X11Image.h"
 #include <assert.h>
 #include <cstdlib>
 #include <limits>
@@ -11,6 +12,10 @@ namespace x11 {
 }
 typedef x11::Atom Atom;
 
+unsigned long rgb(unsigned char r, unsigned char g, unsigned char b) {
+    return (r << 16) + (g << 8) + b;
+}
+
 namespace rgl {
 
     X11Window::X11Window(const char* title, Vector2i size, Vector2i pos) : Window(title, size, pos) {
@@ -20,23 +25,21 @@ namespace rgl {
         m_screen = x11::XDefaultScreen(m_display);
         x11::Window rootWindow = x11::XDefaultRootWindow(m_display);
 
-        int blackColor = x11::XBlackPixel(m_display, m_screen);
-        int whiteColor = x11::XWhitePixel(m_display, m_screen);
-
         // Set requirements for rendering target
         int screenBitDepth = 24;
         int matchVInfoRet = x11::XMatchVisualInfo(m_display, m_screen, screenBitDepth, TrueColor, &m_vInfo);
         assert(matchVInfoRet);
 
         // Set window attributes
-        m_windowAttributes.background_pixel = 0;
-        m_windowAttributes.bit_gravity = StaticGravity; // Keep window content on resize
-        m_windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
-        m_windowAttributes.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask | ExposureMask; // Tell the server which events to inform us about
+        x11::XSetWindowAttributes windowAttributes;
+        windowAttributes.background_pixel = x11::XWhitePixel(m_display, m_screen);
+        windowAttributes.bit_gravity = StaticGravity; // Keep window content on resize
+        windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
+        windowAttributes.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask | ExposureMask; // Tell the server which events to inform us about
         unsigned long attributeMask = CWBitGravity | CWBackPixel | CWColormap | CWEventMask;
 
         // Create Window
-        m_window = x11::XCreateWindow(m_display, rootWindow, pos.x, pos.y, size.x, size.y, 0, m_vInfo.depth, InputOutput, m_vInfo.visual, attributeMask, &m_windowAttributes);
+        m_window = x11::XCreateWindow(m_display, rootWindow, pos.x, pos.y, size.x, size.y, 0, m_vInfo.depth, InputOutput, m_vInfo.visual, attributeMask, &windowAttributes);
         x11::XStoreName(m_display, m_window, title);
 
         // This is used to intercept window closing requests so that they can be handled by the user
@@ -54,16 +57,10 @@ namespace rgl {
         }
 
         // Create graphics context
-        m_gc = x11::XDefaultGC(m_display, m_screen);
-
-        initWindowBuffer();
+        m_gc = x11::XCreateGC(m_display, m_window, 0, NULL);
     }
 
     X11Window::~X11Window() {
-        if(m_windowBuffer != nullptr) {
-            free(m_windowBuffer);
-        }
-
         x11::XCloseDisplay(m_display);
     }
 
@@ -74,10 +71,6 @@ namespace rgl {
     }
 
     void X11Window::draw() {
-        if(!m_windowBuffer) return;
-        
-        Vector2i size = getWindowSize();
-        int t = x11::XPutImage(m_display, m_window, m_gc, m_xWindowBuffer, 0, 0, 0, 0, size.x, size.y);        
     }
 
     void X11Window::pollEvents() {
@@ -102,7 +95,6 @@ namespace rgl {
                 if(m_size.x != ce->width || m_size.y != ce->height) {
                     m_size.x = ce->width;
                     m_size.y = ce->height;
-                    initWindowBuffer();
                     WindowResizeEvent wre;
                     m_eventCallback(&wre);
                 }
@@ -150,18 +142,12 @@ namespace rgl {
         m_isFullscreen = fullscreen;
     }
 
-    void X11Window::setPixel(int x, int y, Vector3 val) {
-        if(x < 0 || x >= m_size.x || y < 0 || y >= m_size.y) return;
-
-        val *= 255.0;
-        unsigned int pixelVal = 0xFF000000 | ((unsigned int)val.x << 16) | ((unsigned int)val.y << 8) | (unsigned int)val.z;
-
-        int offset = (x + y * m_size.x) * bytesPerPixel;
-        *((unsigned int*)(m_windowBuffer + offset)) = pixelVal;
+    std::unique_ptr<Image> X11Window::createImage(Vector2i size) {
+        return std::make_unique<X11Image>(m_display, &m_vInfo, 4, size);
     }
 
-    void X11Window::setPixel(const Vector2i& pos, Vector3 val) {
-        setPixel(pos.x, pos.y, val);
+    void X11Window::drawImage(Image* image, Vector2i pos) {
+        x11::XPutImage(m_display, m_window, m_gc, ((X11Image*)image)->m_ximage, 0, 0, pos.x, pos.y, image->getSize().x, image->getSize().y);
     }
 
     void X11Window::setWindowSize(Vector2i size) {
@@ -172,21 +158,6 @@ namespace rgl {
     void X11Window::setWindowPos(Vector2i pos) {
         x11::XMoveWindow(m_display, m_window, pos.x, pos.y);
         m_pos = pos;
-    }
-
-    char* X11Window::getWindowBuffer() {
-        return m_windowBuffer;
-    }
-
-    void X11Window::initWindowBuffer() {
-        if(m_windowBuffer != nullptr) {
-            XDestroyImage(m_xWindowBuffer);
-            m_windowBuffer = nullptr;
-        }
-        m_windowBuffer = (char*)malloc(getWindowBufferSize());
-
-        Vector2i size = getWindowSize();
-        m_xWindowBuffer = x11::XCreateImage(m_display, m_vInfo.visual, m_vInfo.depth, ZPixmap, 0, m_windowBuffer, size.x, size.y, bytesPerPixel * 8, 0);
     }
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Etc/Vector.h"
 #include "Event/Event.h"
+#include "Image.h"
 #include <memory>
 #include <functional>
 
@@ -23,21 +24,20 @@ namespace rgl {
         friend class Application;
 
     public:
-        virtual void setPixel(int x, int y, Vector3 val) = 0;
-        virtual void setPixel(const Vector2i& pos, Vector3 val) = 0;
+        virtual std::unique_ptr<Image> createImage(Vector2i size) = 0;
+
+        virtual void drawImage(Image* image, Vector2i pos) = 0;
+
         virtual void setFullscreen(bool fullscreen) = 0;
         virtual void setWindowSize(Vector2i size) = 0;
         virtual void setWindowPos(Vector2i pos) = 0;
 
-        virtual char* getWindowBuffer() = 0;
         Vector2i getWindowSize() const;
         Vector2i getWindowPos() const;
-        int getWindowBufferSize() const;
         bool isFullscreen() const;
 
     public:
         bool windowOpen = true;
-        const int bytesPerPixel = 4;
     
     protected:
         EventCallbackFunction m_eventCallback;

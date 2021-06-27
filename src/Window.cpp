@@ -29,10 +29,6 @@ namespace rgl {
         return m_pos;
     }
 
-    int Window::getWindowBufferSize() const {
-        return m_size.x * m_size.y * bytesPerPixel;
-    }
-
     bool Window::isFullscreen() const {
         return m_isFullscreen;
     }
