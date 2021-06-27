@@ -16,6 +16,7 @@ namespace rgl {
         if(window.get()) {
             window->open();
         }
+        onInit();
         window->setEventCallback([this](Event* e){ return this->handleEvent(e); });
 
         while(window->windowOpen) {
