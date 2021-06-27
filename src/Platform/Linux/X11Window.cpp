@@ -58,6 +58,13 @@ namespace rgl {
 
         // Create graphics context
         m_gc = x11::XCreateGC(m_display, m_window, 0, NULL);
+
+        // Set up default font
+        const char* fontName = "fixed";
+        x11::XFontStruct* fontInfo = x11::XLoadQueryFont(m_display, fontName);
+        if(fontInfo) {
+            x11::XSetFont(m_display, m_gc, fontInfo->fid);
+        }
     }
 
     X11Window::~X11Window() {
@@ -148,6 +155,10 @@ namespace rgl {
 
     void X11Window::drawImage(Image* image, Vector2i pos) {
         x11::XPutImage(m_display, m_window, m_gc, ((X11Image*)image)->m_ximage, 0, 0, pos.x, pos.y, image->getSize().x, image->getSize().y);
+    }
+
+    void X11Window::drawString(const char* string, Vector2i pos) {
+        x11::XDrawString(m_display, m_window, m_gc, pos.x, pos.y, string, strlen(string));
     }
 
     void X11Window::setWindowSize(Vector2i size) {

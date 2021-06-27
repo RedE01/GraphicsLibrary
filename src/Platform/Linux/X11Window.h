@@ -17,6 +17,7 @@ namespace rgl {
         virtual std::unique_ptr<Image> createImage(Vector2i size) override;
 
         virtual void drawImage(Image* image, Vector2i pos) override;
+        virtual void drawString(const char* string, Vector2i pos) override;
 
         virtual void setWindowSize(Vector2i size) override;
         virtual void setWindowPos(Vector2i pos) override;

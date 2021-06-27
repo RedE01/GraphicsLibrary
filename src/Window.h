@@ -27,6 +27,7 @@ namespace rgl {
         virtual std::unique_ptr<Image> createImage(Vector2i size) = 0;
 
         virtual void drawImage(Image* image, Vector2i pos) = 0;
+        virtual void drawString(const char* string, Vector2i pos) = 0;
 
         virtual void setFullscreen(bool fullscreen) = 0;
         virtual void setWindowSize(Vector2i size) = 0;
