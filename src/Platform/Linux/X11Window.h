@@ -19,6 +19,8 @@ namespace rgl {
         virtual void drawImage(Image* image, Vector2i pos) override;
         virtual void drawString(const char* string, Vector2i pos) override;
 
+        virtual void setDrawColor(Vector3 color) override;
+        virtual void setBackgroundColor(Vector3 color) override;
         virtual void setWindowSize(Vector2i size) override;
         virtual void setWindowPos(Vector2i pos) override;
 

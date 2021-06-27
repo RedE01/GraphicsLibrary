@@ -161,6 +161,14 @@ namespace rgl {
         x11::XDrawString(m_display, m_window, m_gc, pos.x, pos.y, string, strlen(string));
     }
 
+    void X11Window::setDrawColor(Vector3 color) {
+        x11::XSetForeground(m_display, m_gc, rgb(color.x * 255, color.y * 255, color.z * 255));
+    }
+
+    void X11Window::setBackgroundColor(Vector3 color) {
+        x11::XSetWindowBackground(m_display, m_window, rgb(color.x * 255, color.y * 255, color.z * 255));
+    }
+
     void X11Window::setWindowSize(Vector2i size) {
         x11::XResizeWindow(m_display, m_window, size.x, size.y);
         m_size = size;

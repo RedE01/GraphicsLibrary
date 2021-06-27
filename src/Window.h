@@ -29,6 +29,8 @@ namespace rgl {
         virtual void drawImage(Image* image, Vector2i pos) = 0;
         virtual void drawString(const char* string, Vector2i pos) = 0;
 
+        virtual void setDrawColor(Vector3 color) = 0;
+        virtual void setBackgroundColor(Vector3 color) = 0;
         virtual void setFullscreen(bool fullscreen) = 0;
         virtual void setWindowSize(Vector2i size) = 0;
         virtual void setWindowPos(Vector2i pos) = 0;
