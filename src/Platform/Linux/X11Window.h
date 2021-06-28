@@ -18,6 +18,12 @@ namespace rgl {
 
         virtual void drawImage(Image* image, Vector2i pos) override;
         virtual void drawString(const char* string, Vector2i pos) override;
+        virtual void drawRectangle(Vector2i pos, Vector2i size) override;
+        virtual void drawRectangleFilled(Vector2i pos, Vector2i size) override;
+        virtual void drawCircle(Vector2i pos, Vector2i size) override;
+        virtual void drawCircleFilled(Vector2i pos, Vector2i size) override;
+        virtual void drawLine(Vector2i pos1, Vector2i pos2) override;
+        virtual void clearScreen() override;
 
         virtual void setDrawColor(Vector3 color) override;
         virtual void setBackgroundColor(Vector3 color) override;

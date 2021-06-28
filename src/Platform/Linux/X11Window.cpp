@@ -161,6 +161,30 @@ namespace rgl {
         x11::XDrawString(m_display, m_window, m_gc, pos.x, pos.y, string, strlen(string));
     }
 
+    void X11Window::drawRectangle(Vector2i pos, Vector2i size) {
+        x11::XDrawRectangle(m_display, m_window, m_gc, pos.x, pos.y, size.x, size.y);
+    }
+
+    void X11Window::drawRectangleFilled(Vector2i pos, Vector2i size) {
+        x11::XFillRectangle(m_display, m_window, m_gc, pos.x, pos.y, size.x, size.y);
+    }
+
+    void X11Window::drawCircle(Vector2i pos, Vector2i size) {
+        x11::XDrawArc(m_display, m_window, m_gc, pos.x, pos.y, size.x, size.y, 0, 23040);
+    }
+
+    void X11Window::drawCircleFilled(Vector2i pos, Vector2i size) {
+        x11::XFillArc(m_display, m_window, m_gc, pos.x, pos.y, size.x, size.y, 0, 23040);
+    }
+
+    void X11Window::drawLine(Vector2i pos1, Vector2i pos2) {
+        x11::XDrawLine(m_display, m_window, m_gc, pos1.x, pos1.y, pos2.x, pos2.y);
+    }
+
+    void X11Window::clearScreen() {
+        x11::XClearWindow(m_display, m_window);
+    }
+
     void X11Window::setDrawColor(Vector3 color) {
         x11::XSetForeground(m_display, m_gc, rgb(color.x * 255, color.y * 255, color.z * 255));
     }
