@@ -35,7 +35,7 @@ namespace rgl {
         windowAttributes.background_pixel = x11::XWhitePixel(m_display, m_screen);
         windowAttributes.bit_gravity = StaticGravity; // Keep window content on resize
         windowAttributes.colormap = XCreateColormap(m_display, rootWindow, m_vInfo.visual, AllocNone);
-        windowAttributes.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask | ExposureMask; // Tell the server which events to inform us about
+        windowAttributes.event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask | ExposureMask | PointerMotionMask | ButtonPressMask; // Tell the server which events to inform us about
         unsigned long attributeMask = CWBitGravity | CWBackPixel | CWColormap | CWEventMask;
 
         // Create Window
@@ -124,6 +124,21 @@ namespace rgl {
                 x11::KeySym ks = x11::XLookupKeysym(&e.xkey, 0);
                 KeyReleasedEvent kre(m_keycodeMapper.getKey(ks));
                 m_eventCallback(&kre);
+                break;
+            }
+            case MotionNotify: {
+                MouseMovedEvent mme(rgl::Vector2i(e.xmotion.x, e.xmotion.y), rgl::Vector2i(e.xmotion.x_root, e.xmotion.y_root));
+                m_eventCallback(&mme);
+                break;
+            }
+            case ButtonPress: {
+                MouseButtonPressedEvent mbpe(m_keycodeMapper.getButton(e.xbutton.button), rgl::Vector2i(e.xbutton.x, e.xbutton.y), rgl::Vector2i(e.xbutton.x_root, e.xbutton.y_root));
+                m_eventCallback(&mbpe);
+                break;
+            }
+            case ButtonRelease: {
+                MouseButtonReleasedEvent mbre(m_keycodeMapper.getButton(e.xbutton.button), rgl::Vector2i(e.xbutton.x, e.xbutton.y), rgl::Vector2i(e.xbutton.x_root, e.xbutton.y_root));
+                m_eventCallback(&mbre);
                 break;
             }
             }

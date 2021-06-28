@@ -12,5 +12,10 @@ namespace rgl {
         Left, Up, Right, Down,
         KEY_LAST
     };
+    
+    enum MouseButton {
+        NO_BUTTON = 0,
+        LEFT, MIDDLE, RIGHT
+    };
 
 }

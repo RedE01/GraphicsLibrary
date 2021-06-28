@@ -1,5 +1,6 @@
 #include "../../Input/KeycodeMapper.h"
 #include <X11/keysym.h>
+#include <X11/X.h>
 
 namespace rgl {
 
@@ -28,12 +29,21 @@ namespace rgl {
         m_keyMap[XK_End] = Key::End; m_keyMap[XK_Page_Down] = Key::PageDown;
 
         m_keyMap[XK_Left] = Key::Left; m_keyMap[XK_Up] = Key::Up; m_keyMap[XK_Right] = Key::Right; m_keyMap[XK_Down] = Key::Down;
+
+
+        m_buttonMap[Button1] = MouseButton::LEFT; m_buttonMap[Button2] = MouseButton::MIDDLE; m_buttonMap[Button3] = MouseButton::RIGHT;
     }
 
     int KeycodeMapper::getKey(const int& keycode) {
         auto keySearch = m_keyMap.find(keycode);
         if(keySearch == m_keyMap.end()) return 0;
         return keySearch->second;
+    }
+
+    int KeycodeMapper::getButton(const int& button) {
+        auto buttonSearch = m_buttonMap.find(button);
+        if(buttonSearch == m_buttonMap.end()) return button;
+        return buttonSearch->second;
     }
 
 }
